@@ -24,4 +24,4 @@ flutter:
   fonts:
     - family: Google Sans
       fonts:
-        - asset: assets/GoogleSans.ttf
+        - asset: fonts/GoogleSans.ttf
