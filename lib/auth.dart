@@ -14,7 +14,7 @@ Future<FirebaseUser> handleSignIn() async {
   );
 
   final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
-  print("signed in as ${user.displayName}");
+  print("signed in " + user.displayName);
   return user;
 }
 

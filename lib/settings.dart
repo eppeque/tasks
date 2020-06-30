@@ -1,59 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'theme_provider.dart';
 import 'auth.dart';
-import 'home.dart';
+import 'main.dart';
 
-class Settings extends StatefulWidget {
-  final bool connected;
-
-  Settings({this.connected});
-
-  @override
-  _SettingsState createState() => _SettingsState();
-}
-
-class _SettingsState extends State<Settings> {
-  final _version = '1.0.0';
-
+class SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Settings'),
-      ),
-      body: ListView(
-        children: <Widget>[
-          SwitchListTile(
-            title: Text('Dark Theme'),
-            value: themeProvider.isDarkTheme,
-            onChanged: (val) {
-              setState(() {
-                themeProvider.setTheme = val;
-              });
-            },
+    return IconButton(
+      icon: Icon(Icons.settings),
+      tooltip: 'Accéder aux paramètres',
+      onPressed: () => showModalBottomSheet(
+        context: context,
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Settings',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            elevation: 0.0,
+            centerTitle: true,
           ),
-          widget.connected
-              ? ListTile(
-                  leading: Icon(Icons.highlight_off),
-                  title: Text('Log out'),
-                  onTap: () {
-                    signOut();
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => Home(),
+          body: Column(
+            children: <Widget>[
+              ListTile(
+                title: const Text('Thème sombre'),
+                leading: Icon(
+                  Icons.brightness_medium,
+                  color: Theme.of(context).accentColor,
+                ),
+                trailing: Switch(
+                  value: themeProvider.isDarkTheme,
+                  onChanged: (val) => themeProvider.setTheme = val,
+                  activeColor: Theme.of(context).accentColor,
+                ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.highlight_off,
+                  color: Theme.of(context).errorColor,
+                ),
+                title: Text('Se déconnecter'),
+                onTap: () {
+                  signOut();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => Home(
+                        user: null,
                       ),
-                    );
-                  },
-                )
-              : Container(),
-          ListTile(
-            leading: Icon(Icons.info_outline),
-            title: Text('Version $_version'),
-            subtitle: Text('Developed by Eppe, LLC. with Flutter and Firebase.'),
+                    ),
+                  );
+                },
+              ),
+              AboutListTile(
+                child: Text('À propos de cette application'),
+                icon: Icon(
+                  Icons.info_outline,
+                  color: Theme.of(context).accentColor,
+                ),
+                applicationIcon: Icon(
+                  Icons.done_all,
+                  color: Theme.of(context).accentColor,
+                ),
+                applicationName: 'Eppe Tasks',
+                applicationVersion: '2.0.0',
+                applicationLegalese:
+                    'Cette application est développée par Quentin Eppe. Tous droits réservés.',
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

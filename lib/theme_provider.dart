@@ -5,7 +5,7 @@ class ThemeProvider with ChangeNotifier {
 
   ThemeProvider({this.isDarkTheme});
 
-  ThemeData get getThemeData => isDarkTheme ? darkTheme : lightTheme;
+  ThemeData get getTheme => isDarkTheme ? darkTheme : lightTheme;
 
   set setTheme(bool val) {
     if (val) {
@@ -17,13 +17,17 @@ class ThemeProvider with ChangeNotifier {
   }
 }
 
+final _blue = Color(0xFF4885ed);
+
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
+  accentColor: _blue,
   fontFamily: 'Google Sans',
 );
 
 final lightTheme = ThemeData(
-  primaryColor: Color(0xFFEA4335),
-  accentColor: Color(0xFFEA9F35),
+  primaryColor: Colors.white,
+  accentColor: _blue,
+  scaffoldBackgroundColor: Colors.white,
   fontFamily: 'Google Sans',
 );
