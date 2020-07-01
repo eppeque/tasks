@@ -187,6 +187,7 @@ class _HomeState extends State<Home> {
                         ),
                         leading: Checkbox(
                           value: task['isDone'],
+                          activeColor: Theme.of(context).accentColor,
                           onChanged: (val) async {
                             setState(() =>
                                 tasks[index].update('isDone', (value) => val));
