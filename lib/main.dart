@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Duration(seconds: 2),
       () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => Home(),
+          builder: (context) => Home(user: null),
         ),
       ),
     );
@@ -77,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
 class Home extends StatefulWidget {
   final FirebaseUser user;
 
-  Home({Key key, this.user}) : super(key: key);
+  Home({Key key, @required this.user}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
-          SettingsButton(),
+          SettingsButton(user: widget.user),
         ],
       ),
       body: connected

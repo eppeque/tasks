@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'theme_provider.dart';
 import 'auth.dart';
 import 'main.dart';
 
 class SettingsButton extends StatelessWidget {
+  final FirebaseUser user;
+
+  const SettingsButton({Key key, @required this.user}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -17,7 +22,7 @@ class SettingsButton extends StatelessWidget {
         builder: (context) => Scaffold(
           appBar: AppBar(
             title: Text(
-              'Settings',
+              'Paramètres',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             elevation: 0.0,
@@ -25,6 +30,18 @@ class SettingsButton extends StatelessWidget {
           ),
           body: Column(
             children: <Widget>[
+              user == null
+                  ? Container()
+                  : ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(100.0),
+                        ),
+                        child: Image.network(user.photoUrl),
+                      ),
+                      title: Text('Connecté en tant que ${user.displayName}'),
+                      subtitle: Text(user.email),
+                    ),
               ListTile(
                 title: const Text('Thème sombre'),
                 leading: Icon(
@@ -37,24 +54,26 @@ class SettingsButton extends StatelessWidget {
                   activeColor: Theme.of(context).accentColor,
                 ),
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.highlight_off,
-                  color: Theme.of(context).errorColor,
-                ),
-                title: Text('Se déconnecter'),
-                onTap: () {
-                  signOut();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => Home(
-                        user: null,
+              user == null
+                  ? Container()
+                  : ListTile(
+                      leading: Icon(
+                        Icons.highlight_off,
+                        color: Theme.of(context).errorColor,
                       ),
+                      title: Text('Se déconnecter'),
+                      onTap: () {
+                        signOut();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => Home(
+                              user: null,
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
               AboutListTile(
                 child: Text('À propos de cette application'),
                 icon: Icon(
