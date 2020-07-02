@@ -8,7 +8,7 @@ This project is a Flutter app. To learn more about Flutter visit [the official w
 
 ## Firebase
 
-This app uses Firebase for auth and database (Cloud Firestore). To integrate your Firebase project to this Flutter app download the `google-services.json` file which is available while the adding of an app on Firebase Console.
+This app uses Firebase for auth and database (Cloud Firestore). To integrate your Firebase project to this Flutter app download the `google-services.json` file which is available while the adding of an app on the Firebase Console and put in the `android/app` folder. More infos in the [Firebase documentation](https://firebase.google.com/docs/flutter/setup).
 
 ## Signing the app
 
