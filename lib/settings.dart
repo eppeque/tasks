@@ -30,18 +30,6 @@ class SettingsButton extends StatelessWidget {
           ),
           body: Column(
             children: <Widget>[
-              user == null
-                  ? Container()
-                  : ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(100.0),
-                        ),
-                        child: Image.network(user.photoUrl),
-                      ),
-                      title: Text('Connecté en tant que ${user.displayName}'),
-                      subtitle: Text(user.email),
-                    ),
               ListTile(
                 title: const Text('Thème sombre'),
                 leading: Icon(

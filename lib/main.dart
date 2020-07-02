@@ -84,15 +84,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool connected = false;
+  bool _connected = false;
   TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     if (widget.user == null) {
-      connected = false;
+      _connected = false;
     } else {
-      connected = true;
+      _connected = true;
     }
     return Scaffold(
       appBar: AppBar(
@@ -106,14 +106,53 @@ class _HomeState extends State<Home> {
           ),
         ),
         title: Text(
-          connected ? 'Vos tâches' : 'Bienvenue !',
+          _connected ? 'Vos tâches' : 'Bienvenue !',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
           SettingsButton(user: widget.user),
+          _connected
+              ? IconButton(
+                  icon: ClipRRect(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(100.0),
+                    ),
+                    child: Image.network(widget.user.photoUrl),
+                  ),
+                  tooltip: 'Infos du compte',
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                      title: const Text('Votre compte'),
+                      content: ListTile(
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100.0),
+                          ),
+                          child: Image.network(widget.user.photoUrl),
+                        ),
+                        title: Text(widget.user.displayName),
+                        subtitle: Text(widget.user.email),
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: const Text('Fermer'),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Container(),
         ],
       ),
-      body: connected
+      body: _connected
           ? StreamBuilder<DocumentSnapshot>(
               stream: Firestore.instance
                   .collection('users')
@@ -250,7 +289,7 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-      floatingActionButton: connected
+      floatingActionButton: _connected
           ? FloatingActionButton(
               child: Icon(Icons.add),
               tooltip: 'Créer une tâche',
