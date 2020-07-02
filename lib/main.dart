@@ -18,12 +18,12 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(isDarkTheme: false),
-      child: MyApp(),
+      child: EppeTasksApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class EppeTasksApp extends StatelessWidget {
   final _title = 'Eppe Tasks';
 
   @override
