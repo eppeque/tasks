@@ -23,6 +23,7 @@ final darkTheme = ThemeData(
   brightness: Brightness.dark,
   accentColor: _blue,
   fontFamily: 'Google Sans',
+  visualDensity: VisualDensity.adaptivePlatformDensity,
 );
 
 final lightTheme = ThemeData(
@@ -30,4 +31,5 @@ final lightTheme = ThemeData(
   accentColor: _blue,
   scaffoldBackgroundColor: Colors.white,
   fontFamily: 'Google Sans',
+  visualDensity: VisualDensity.adaptivePlatformDensity,
 );
