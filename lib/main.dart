@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity/connectivity.dart';
 
 import 'theme_provider.dart';
 import 'auth.dart';
 import 'settings.dart';
+import 'no_network.dart';
 
 import 'dart:async';
 
@@ -55,28 +57,53 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  SharedPreferences _prefs;
+
   void initState() {
     super.initState();
     Timer(
       Duration(seconds: 2),
-      () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => Home(user: null),
-        ),
-      ),
+      _checkConnectityAndSignIn,
     );
+  }
+
+  void _checkConnectityAndSignIn() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+      _prefs = await SharedPreferences.getInstance();
+      final accessToken = _prefs.getString('accessToken') ?? null;
+      final idToken = _prefs.getString('idToken') ?? null;
+      FirebaseUser user;
+      if (accessToken != null && idToken != null) {
+        user = await auth.handleSignIn(accessToken, idToken);
+      }
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => Home(user: user ?? null),
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => NoNetworkPage(),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Hero(
-          tag: 'icon',
-          child: Icon(
-            Icons.done_all,
-            size: 100.0,
-            color: Theme.of(context).accentColor,
+      body: SafeArea(
+        child: Center(
+          child: Hero(
+            tag: 'icon',
+            child: Icon(
+              Icons.done_all,
+              size: 100.0,
+              color: Theme.of(context).accentColor,
+            ),
           ),
         ),
       ),
@@ -147,8 +174,14 @@ class _HomeState extends State<Home> {
                           ),
                           child: Image.network(widget.user.photoUrl),
                         ),
-                        title: Text(widget.user.displayName),
-                        subtitle: Text(widget.user.email),
+                        title: Text(
+                          widget.user.displayName,
+                          style: TextStyle(fontSize: 20.0),
+                        ),
+                        subtitle: Text(
+                          widget.user.email,
+                          style: TextStyle(fontSize: 10.0),
+                        ),
                         contentPadding: EdgeInsets.zero,
                       ),
                       actions: <Widget>[
@@ -277,7 +310,7 @@ class _HomeState extends State<Home> {
                     color: Color(0xFF4885ed),
                     textColor: Colors.white,
                     onPressed: () {
-                      handleSignIn().then((FirebaseUser user) async {
+                      auth.handleSignIn().then((FirebaseUser user) async {
                         final docRef = Firestore.instance
                             .collection('users')
                             .document(user.uid);
