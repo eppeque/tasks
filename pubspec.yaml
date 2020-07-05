@@ -15,6 +15,7 @@ dependencies:
   cloud_firestore: ^0.13.0+1
   google_sign_in: ^4.0.16
   font_awesome_flutter: ^8.8.1
+  shared_preferences: ^0.5.7+3
 
 dev_dependencies:
   flutter_test:

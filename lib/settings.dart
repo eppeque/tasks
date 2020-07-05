@@ -1,15 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'theme_provider.dart';
 import 'auth.dart';
 import 'main.dart';
 
-class SettingsButton extends StatelessWidget {
+/// [SettingsButton] for the [AppBar] actions.
+/// It's basically an [IconButton] that [showModalBottomSheet].
+class SettingsButton extends StatefulWidget {
   final FirebaseUser user;
 
   const SettingsButton({Key key, @required this.user}) : super(key: key);
+
+  @override
+  _SettingsButtonState createState() => _SettingsButtonState();
+}
+
+class _SettingsButtonState extends State<SettingsButton> {
+  SharedPreferences _prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _getPrefs();
+  }
+
+  Future<Null> _getPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +58,14 @@ class SettingsButton extends StatelessWidget {
                 ),
                 trailing: Switch(
                   value: themeProvider.isDarkTheme,
-                  onChanged: (val) => themeProvider.setTheme = val,
+                  onChanged: (val) {
+                    themeProvider.setTheme = val;
+                    _prefs.setBool('isDarkTheme', val);
+                  },
                   activeColor: Theme.of(context).accentColor,
                 ),
               ),
-              user == null
+              widget.user == null
                   ? Container()
                   : ListTile(
                       leading: Icon(

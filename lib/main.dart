@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'theme_provider.dart';
 import 'auth.dart';
@@ -11,26 +12,33 @@ import 'settings.dart';
 
 import 'dart:async';
 
-void main() {
+/// [main] function where we:
+/// * Define the [statusBarColor] to transparent.
+/// * Get the [isDarkTheme] boolean from the [SharedPreferences].
+/// * Run the app via the [EppeTasksApp] widget.
+/// In the the [runApp] method the [EppeTasksApp] widget is wrapped in the [ChangeNotifierProvider] to change the theme dynamically.
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
+  final prefs = await SharedPreferences.getInstance();
+  final isDarkTheme = prefs.getBool('isDarkTheme') ?? false;
   runApp(
     ChangeNotifierProvider(
-      create: (_) => ThemeProvider(isDarkTheme: false),
+      create: (_) => ThemeProvider(isDarkTheme: isDarkTheme),
       child: EppeTasksApp(),
     ),
   );
 }
 
+/// This is the root of the app.
 class EppeTasksApp extends StatelessWidget {
-  final _title = 'Eppe Tasks';
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
-      title: _title,
+      title: 'Tasks',
       home: SplashScreen(),
       theme: themeProvider.getTheme,
       darkTheme: darkTheme,
@@ -39,6 +47,8 @@ class EppeTasksApp extends StatelessWidget {
   }
 }
 
+/// The application starts by displaying this widget.
+/// This is a [SplashScreen] that opens the [Home] page after 2 seconds.
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -74,6 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
+/// [Home] page of the app.
 class Home extends StatefulWidget {
   final FirebaseUser user;
 
