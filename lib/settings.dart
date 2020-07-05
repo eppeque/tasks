@@ -111,7 +111,7 @@ class _SettingsButtonState extends State<SettingsButton> {
                       color: Theme.of(context).accentColor,
                     ),
                     applicationName: 'Eppe Tasks',
-                    applicationVersion: '2.0.0',
+                    applicationVersion: '2.1.0',
                     applicationLegalese:
                         'Cette application est développée par Quentin Eppe. Tous droits réservés.',
                   ),
