@@ -72,11 +72,10 @@ class _SplashScreenState extends State<SplashScreen> {
     if (connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile) {
       _prefs = await SharedPreferences.getInstance();
-      final accessToken = _prefs.getString('accessToken') ?? null;
-      final idToken = _prefs.getString('idToken') ?? null;
+      bool loggedIn = _prefs.getBool('loggedIn') ?? false;
       FirebaseUser user;
-      if (accessToken != null && idToken != null) {
-        user = await auth.handleSignIn(accessToken, idToken);
+      if (loggedIn) {
+        user = await auth.handleSignIn();
       }
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(

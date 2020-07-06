@@ -88,8 +88,7 @@ class _SettingsButtonState extends State<SettingsButton> {
                           title: Text('Se déconnecter'),
                           onTap: () {
                             auth.signOut();
-                            _prefs.setString('accessToken', null);
-                            _prefs.setString('idToken', null);
+                            _prefs.setBool('loggedIn', false);
                             Navigator.of(context).pop();
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(

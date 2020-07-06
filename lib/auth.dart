@@ -6,21 +6,18 @@ class Auth {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<FirebaseUser> handleSignIn([String accessToken, String idToken]) async {
+  Future<FirebaseUser> handleSignIn() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: accessToken ?? googleAuth.accessToken,
-      idToken: idToken ?? googleAuth.idToken,
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
     );
 
-    if (accessToken == null && idToken == null) {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('accessToken', googleAuth.accessToken);
-      prefs.setString('idToken', googleAuth.idToken);
-    }
+    final _prefs = await SharedPreferences.getInstance();
+    _prefs.setBool('loggedIn', true);
 
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
