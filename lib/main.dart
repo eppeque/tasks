@@ -295,10 +295,10 @@ class _HomeState extends State<Home> {
                 children: <Widget>[
                   Padding(
                     padding:
-                        EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20.0),
+                        EdgeInsets.all(20.0),
                     child: Text(
                       'Pour accéder à vos tâches, vous devez vous connecter à votre compte Google !',
-                      style: TextStyle(fontSize: 20.0),
+                      style: TextStyle(fontSize: 24.0),
                       textAlign: TextAlign.center,
                     ),
                   ),
